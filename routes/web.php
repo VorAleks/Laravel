@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoriesController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\IndexController as AdminIndexController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\NewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,63 +17,32 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-$text1 = 'Привет мир!';
-$text2 = 'Информация о проекте';
-$text3 = 'Новости';
-$title1 = 'Главная стпаница';
-$title2 = 'Информация';
-$title3 = 'Новости';
-$info = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras imperdiet diam non metus iaculis laoreet. Cras aliquam ultricies eros ac luctus. Fusce accumsan lorem eget accumsan accumsan. Morbi vitae commodo nunc. Nam velit mi, eleifend id aliquet sit amet, posuere nec lorem. Aliquam pretium, nisl a tincidunt molestie, neque ligula.';
-$new1 = 'Cras imperdiet diam non metus iaculis laoreet. Cras aliquam ultricies eros ac luctus. Fusce accumsan lorem eget accumsan accumsan.';
-$new2 = 'Morbi vitae commodo nunc. Nam velit mi, eleifend id aliquet sit amet, posuere nec lorem. Aliquam pretium, nisl a tincidunt molestie, neque ligula.';
 
-Route::get('/', function () use($text1, $title1) {
 //   return view('Welcome');
-    return <<<php
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$title1</title>
-</head>
-<body>
-    <h1>$text1</h1>
-</body>
-php;
 
+
+// Admin
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function() {
+    Route::get('/', [AdminIndexController::class, 'index'])
+        ->name('index');
+    Route::resource('/categories', AdminCategoryController::class);
+    Route::resource('/news', AdminNewsController::class);
 });
 
-Route::get('/info/', function () use($text2, $title2, $info) {
-    return <<<php
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$title2</title>
-</head>
-<body>
-    <h1>$text2</h1>
-    <p>$info</p>
-</body>
-php;
+// Guest's routes
 
-});
-
-Route::get('/news/', function () use($text3, $title3, $new1, $new2) {
-    return <<<php
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$title3</title>
-</head>
-<body>
-    <h1>$text3</h1>
-    <ul>
-        <li>$new1</li>
-        <li>$new2</li>
-    </ul>
-</body>
-php;
-
-});
+Route::get('/', [
+    HomeController::class, 'index'])
+    ->name('index');
+Route::get('/news', [NewsController::class, 'index'])
+    ->name('news.index');
+Route::get('/news/{id}', [NewsController::class, 'show'])
+    ->where('id', '\d+')
+    ->name('news.show');
+Route::get('/categories', [
+    CategoriesController::class, 'index'])
+    ->name('categories.index');
+Route::get('/categories/{id}', [CategoriesController::class, 'show'])
+    ->where('id', '\d+')
+    ->name('categories.show');
