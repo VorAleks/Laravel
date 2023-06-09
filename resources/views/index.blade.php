@@ -1,4 +1,5 @@
 @extends('layouts.main')
+@section('title')Main @parent @stop
 @section('content')
     <div class="container">
         <section class="py-5 text-center container">

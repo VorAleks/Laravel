@@ -25,7 +25,7 @@ use App\Http\Controllers\NewsController;
 // Admin
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function() {
-    Route::get('/', [AdminIndexController::class, 'index'])
+    Route::get('/', AdminIndexController::class)
         ->name('index');
     Route::resource('/categories', AdminCategoriesController::class);
     Route::resource('/news', AdminNewsController::class);

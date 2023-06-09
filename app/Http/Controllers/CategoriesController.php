@@ -17,7 +17,7 @@ class CategoriesController extends Controller
     public function show ($id): View
     {
         $news = $this->getNewsByCategory($id);
-        $categories = $this->getCategories();
+        $categories = $this->getCategories($id);
         return view('news.index', ['news' => $news, 'categories' => $categories]);
     }
 

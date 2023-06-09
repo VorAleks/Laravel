@@ -1,4 +1,5 @@
 @extends('layouts.main')
+@section('title') Categories of news @parent @stop
 @section('content')
     <div class="container">
         <section class="py-0 text-center container">

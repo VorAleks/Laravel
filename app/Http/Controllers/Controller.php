@@ -59,14 +59,16 @@ class Controller extends BaseController
         }
 
         return [
+           0 => [
             'id' => $id,
             'title' => fake()->jobTitle(),
             'status' => 'draft',
             'created_at' => now(),
+        ]
         ];
     }
 
-    protected function getNewsByCategory ($id): array
+    protected function getNewsByCategory (int $id): array
     {
         $news = [];
            for ($i = 0; $i < 10; $i++) {

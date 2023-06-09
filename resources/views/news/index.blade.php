@@ -1,17 +1,22 @@
 @extends('layouts.main')
+@section('title') News @parent @stop
 @section('content')
 <div class="container">
     <section class="py-0 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">Все новости</h1>
+                @if(count($categories) > 1)
+                    <h1 class="fw-light">Все новости</h1>
+                @else
+                    <h1 class="fw-light">Новости: {{ $categories[0]['title'] }}</h1>
+                @endif
             </div>
         </div>
     </section>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         @forelse ($news as $newsItem)
             @foreach ($categories as $item)
-                @if ($item['id'] == $newsItem['category_id'])
+                @if ($item['id'] === $newsItem['category_id'])
                     <?php $category = $item['title']; ?>
                 @endif
             @endforeach
