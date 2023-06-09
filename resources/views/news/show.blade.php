@@ -1,4 +1,5 @@
 @extends('layouts.main')
+@section('title')News "{{ $newsItem['title'] }}" @parent @stop
 @section('content')
     <div class="container">
 {{--        <h1>News</h1>--}}
