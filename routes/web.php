@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\IndexController as AdminIndexController;
@@ -47,3 +48,7 @@ Route::get('/categories', [
 Route::get('/categories/{id}', [CategoriesController::class, 'show'])
     ->where('id', '\d+')
     ->name('categories.show');
+Route::get('/users/order', [UsersController::class, 'order'])
+    ->name('users.order');
+Route::post('/users/store', [UsersController::class, 'store'])
+    ->name('users.store');
