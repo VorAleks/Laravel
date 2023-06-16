@@ -10,7 +10,6 @@ class CategoriesController extends Controller
     public function index (): View
     {
         $categories = $this->getCategories();
-
         return view('categories.index', ['categories' => $categories]);
     }
 
