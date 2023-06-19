@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -9,15 +11,17 @@ class CategoriesController extends Controller
 {
     public function index (): View
     {
-        $categories = $this->getCategories();
-        return view('categories.index', ['categories' => $categories]);
+        $modelCategories = app(Category::class);
+
+        return view('categories.index', ['categories' => $modelCategories->getCategories()]);
     }
 
     public function show ($id): View
     {
-        $news = $this->getNewsByCategory($id);
-        $categories = $this->getCategories($id);
-        return view('news.index', ['news' => $news, 'categories' => $categories]);
+        $modelNews = app(News::class);
+        $modelCategories = app(Category::class);
+
+        return view('news.index', ['news' => $modelNews->getNewsByCategories($id), 'categories' => $modelCategories->getCategoriesById($id)]);
     }
 
 

@@ -17,11 +17,11 @@
 
                         <div class="card-body">
 {{--                            <p>Рубрика: {{$category}}</p>--}}
-                            <p><strong><a href="{{ route('categories.show', ['id' => $newsItem['id']]) }}"><h2>{{$newsItem['title']}}</h2></a></strong></p>
+                            <p><strong><a href="{{ route('categories.show', ['id' => $newsItem->id]) }}"><h2>{{$newsItem->title}}</h2></a></strong></p>
 {{--                            <p class="card-text">{{$newsItem['description']}}</p>--}}
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="{{ route('categories.show', ['id' => $newsItem['id']]) }}" type="button" class="btn btn-sm btn-outline-secondary">К новостям</a>
+                                    <a href="{{ route('categories.show', ['id' => $newsItem->id]) }}" type="button" class="btn btn-sm btn-outline-secondary">К новостям</a>
                                 </div>
 {{--                                <small class="text-muted">{{$newsItem['author']}} ({{$newsItem['created_at']}})</small>--}}
                             </div>
