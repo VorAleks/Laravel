@@ -7,7 +7,25 @@
             <div class="btn-group me-2">
                 <a href="{{ route('admin.categories.create') }}" type="button" class="btn btn-sm btn-outline-secondary">Добавить категорию</a>
             </div>
-
         </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Created_at</th>
+                <th>Actions</th>
+            </tr>
+            @foreach($categoriesList as $news)
+                <tr>
+                    <td>{{ $news->id }}</td>
+                    <td>{{ $news->title }}</td>
+                    <td>{{ $news->created_at }}</td>
+                    <td><a href="">Edit</a>&nbsp; <a href="" style="color:red">Delete</a></td>
+                </tr>
+            @endforeach
+        </table>
     </div>
 @endsection
