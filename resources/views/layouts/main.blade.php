@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+     <meta charset="utf-8">
     <title>@section('title') :: NewsPortal @show</title>
 
     <!-- Bootstrap core CSS -->
@@ -40,6 +40,14 @@
 
     <div class="album py-3 bg-light">
         @yield('content')
+        <head>
+            <meta charset="UTF-8">
+            <title>Алгоритм</title>
+        </head>
+
+        <body>
+
+        </body>
     </div>
 
 </main>

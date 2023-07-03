@@ -6,8 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends Model
 {
@@ -15,22 +14,16 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    public function getCategories(bool $isJoin = false): Collection
-    {
-        if ($isJoin === true) {
-            return DB::table($this->table)
-//                ->where('status', '=', 'active')
-//                ->select('news.*', 'categories.title as categoryTitle')
-//                ->join('category_has_news', 'category_has_news.news_id', '=', 'news.id')
-//                ->join('categories', 'category_has_news.category_id', '=', 'categories.id')
-                ->get();
-        }
-        return DB::table($this->table)->get();
+    protected $fillable = [
+        'title',
+        'description'
+    ];
 
+    /* Relations */
+    public function news(): BelongsToMany
+    {
+        return $this->belongsToMany(News::class, 'category_has_news',
+            'category_id', 'news_id');
     }
 
-    public function getCategoriesById($id): mixed
-    {
-        return DB::table($this->table)->find($id);
-    }
 }

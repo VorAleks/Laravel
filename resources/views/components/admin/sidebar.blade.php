@@ -19,6 +19,24 @@
                     Новости
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link @if(request()->routeIs('admin.sources.*')) active @endif" href="{{ route('admin.sources.index') }}">
+                    <span data-feather="file"></span>
+                    Источники новостей
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @if(request()->routeIs('admin.orders.*')) active @endif" href="{{ route('admin.orders.index') }}">
+                    <span data-feather="file"></span>
+                    Заказы на выгрузку
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @if(request()->routeIs('admin.users.*')) active @endif" href="{{ route('admin.users.index') }}">
+                    <span data-feather="file"></span>
+                    Пользователи
+                </a>
+            </li>
 
         </ul>
     </div>

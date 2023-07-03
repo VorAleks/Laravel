@@ -15,17 +15,20 @@
             <tr>
                 <th>ID</th>
                 <th>Title</th>
+                <th>Description</th>
                 <th>Created_at</th>
                 <th>Actions</th>
             </tr>
-            @foreach($categoriesList as $news)
+            @foreach($categoriesList as $category)
                 <tr>
-                    <td>{{ $news->id }}</td>
-                    <td>{{ $news->title }}</td>
-                    <td>{{ $news->created_at }}</td>
-                    <td><a href="">Edit</a>&nbsp; <a href="" style="color:red">Delete</a></td>
+                    <td>{{ $category->id }}</td>
+                    <td>{{ $category->title }}</td>
+                    <td>{{ $category->description }}</td>
+                    <td>{{ $category->created_at }}</td>
+                    <td><a href="{{ route('admin.categories.edit', ['category' => $category ]) }}">Edit</a>&nbsp; <a href="" style="color:red">Delete</a></td>
                 </tr>
             @endforeach
         </table>
+        {{ $categoriesList->links() }}
     </div>
 @endsection

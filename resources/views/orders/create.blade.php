@@ -12,27 +12,29 @@
             <div class="row py-lg-5">
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <h1 class="fw-light">Заказ на выгрузку данных</h1>
-                    <form method="POST" action="{{route('users.store')}}" enctype="multipart/form-data">
+
+                    <form method="POST" action="{{route('orders.store')}}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="user_name">Имя заказчика</label>
-                            <input type="text" name="user_name" id="user_name" class="form-control" value="{{old('user_name')}}">
+                            <label for="name">Имя заказчика</label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{old('name')}}">
                         </div>
                         <div class="form-group">
-                            <label for="user_phone">Телефон</label>
-                            <input type="text" name="user_phone" id="user_phone" class="form-control" value="{{old('user_phone')}}">
+                            <label for="phone">Телефон</label>
+                            <input type="text" name="phone" id="phone" class="form-control" value="{{old('phone')}}">
                         </div>
                         <div class="form-group">
-                            <label for="user_email">Адрес электронной почты</label>
-                            <input type="email" name="user_email" id="user_email" class="form-control">
+                            <label for="email">Е-мэйл</label>
+                            <input type="text" name="email" id="email" class="form-control" value="{{old('email')}}">
                         </div>
                         <div class="form-group">
-                            <label for="user_order">Описание заказа</label>
-                            <textarea name="user_order" id="user_order" class="form-control">{{old('user_order')}}</textarea>
+                            <label for="description">Описание</label>
+                            <textarea name="description" id="description" class="form-control">{{old('description')}}</textarea>
                         </div>
                         <br />
                         <button type="submit" class="btn btn-success">Сохранить</button>
                     </form>
+
                 </div>
             </div>
         </section>

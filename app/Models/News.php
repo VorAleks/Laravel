@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\NewsStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class News extends Model
 {
@@ -16,35 +16,41 @@ class News extends Model
 
     protected $table = 'news';
 
-    public function getNews(bool $isJoin = false): Collection
-    {
-        if ($isJoin === true) {
-            return DB::table($this->table)
-//                ->where('status', '=', 'active')
-                ->select('news.*', 'categories.title as categoryTitle', 'sources.title as sourceTitle')
-                ->leftjoin('category_has_news', 'category_has_news.news_id', '=', 'news.id')
-                ->leftjoin('categories', 'category_has_news.category_id', '=', 'categories.id')
-                ->leftjoin('news_sources', 'news_sources.news_id', '=', 'news.id')
-                ->leftjoin('sources', 'news_sources.source_id', '=', 'sources.id')
-                ->get();
-        }
-        return DB::table($this->table)->get();
+    protected $fillable = [
+        'title',
+        'author',
+        'status',
+        'description'
+    ];
 
+    /* Relations */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_has_news',
+            'news_id', 'category_id');
     }
 
-    public function getNewsById($id): mixed
+    public function sources(): BelongsToMany
     {
-        return DB::table($this->table)->find($id);
+        return $this->belongsToMany(Source::class, 'news_sources',
+            'news_id', 'source_id');
     }
 
-    public function getNewsByCategories($id): mixed
+
+
+    /* Scopes's */
+    public function scopeActive(Builder $query): void
     {
-        return DB::table($this->table)
-            ->select('news.*', 'categories.title as categoryTitle')
-            ->join('category_has_news', 'category_has_news.news_id', '=', 'news.id')
-            ->join('categories', 'category_has_news.category_id', '=', 'categories.id')
-            ->where('categories.id', '=', $id)
-            ->get();
-            ;
+        $query->where('status', NewsStatus::ACTIVE->value);
+    }
+
+    public function scopeDraft(Builder $query): void
+    {
+        $query->where('status', NewsStatus::DRAFT->value);
+    }
+
+    public function scopeBlocked(Builder $query): void
+    {
+        $query->where('status', NewsStatus::BLOCKED->value);
     }
 }

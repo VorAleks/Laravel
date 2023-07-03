@@ -14,6 +14,14 @@
     <form method="POST" action="{{route('admin.news.store')}}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
+            <label for="categories">Категории</label>
+            <select class="form-control" multiple name="categories[]" id="categories" >
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->title }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
             <label for="title">Заголовок</label>
             <input type="text" name="title" id="title" class="form-control" value="{{old('title')}}">
         </div>
@@ -36,6 +44,14 @@
         <div class="form-group">
             <label for="description">Описание</label>
             <textarea name="description" id="description" class="form-control">{{old('description')}}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="sources">Источники новостей</label>
+            <select class="form-control" multiple name="sources[]" id="sources" >
+                @foreach($sources as $source)
+                    <option value="{{ $source->id }}">{{ $source->title }}</option>
+                @endforeach
+            </select>
         </div>
         <br />
         <button type="submit" class="btn btn-success">Сохранить</button>
