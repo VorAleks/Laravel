@@ -20,12 +20,12 @@
                 <img src="{{$newsItem->image}}"/>
 
                 <div class="card-body">
-                    <p>Рубрика: {{$newsItem->categoryTitle}}</p>
-                    <p><strong><a href="{{ route('news.show', ['id' => $newsItem->id]) }}"><h2>{{$newsItem->title}}</h2></a></strong></p>
+                    <p>Рубрика: {{$newsItem->categories->map(fn($item) => $item->title)->implode('|')}}</p>
+                    <p><strong><a href="{{ route('news.show', ['news' => $newsItem->id]) }}"><h2>{{$newsItem->title}}</h2></a></strong></p>
                     <p class="card-text">{{$newsItem->description}}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                           <a href="{{ route('news.show', ['id' => $newsItem->id]) }}" type="button" class="btn btn-sm btn-outline-secondary">Подробнее</a>
+                           <a href="{{ route('news.show', ['news' => $newsItem->id]) }}" type="button" class="btn btn-sm btn-outline-secondary">Подробнее</a>
                         </div>
                         <small class="text-muted">{{$newsItem->author}} ({{$newsItem->created_at}})</small>
                     </div>

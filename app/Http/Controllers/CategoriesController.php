@@ -1,27 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\News;
-use Illuminate\Http\Request;
+use App\Queries\CategoriesQueryBuilder;
+use App\Queries\NewsQueryBuilder;
+use App\Queries\QueryBuilder;
 use Illuminate\View\View;
 
 class CategoriesController extends Controller
 {
+    protected QueryBuilder $categoriesQueryBuilder;
+
+    public function __construct(
+        CategoriesQueryBuilder $categoriesQueryBuilder,
+    )
+    {
+        $this->categoriesQueryBuilder = $categoriesQueryBuilder;
+    }
+
     public function index (): View
     {
-        $modelCategories = app(Category::class);
-
-        return view('categories.index', ['categories' => $modelCategories->getCategories()]);
+        return view('categories.index', ['categories' => $this->categoriesQueryBuilder->getAll()]);
     }
 
     public function show ($id): View
     {
-        $modelNews = app(News::class);
-        $modelCategories = app(Category::class);
-
-        return view('news.index', ['news' => $modelNews->getNewsByCategories($id), 'categories' => $modelCategories->getCategoriesById($id)]);
+        return view('news.index', [
+            'news' => $this->categoriesQueryBuilder->getById($id)->news->where('status', 'active'),
+            'categories' => $this->categoriesQueryBuilder->getById($id)
+        ]);
     }
 
 
