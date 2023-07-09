@@ -5,29 +5,29 @@
         <h1 class="h2">Добавить заказ на выгрузку</h1>
     </div>
 
-    @if ($errors->any())
-        @foreach($errors->all() as $error)
-            <x-alert type="danger" :message="$error" ></x-alert>
-        @endforeach
-    @endif
+{{--    @if ($errors->any())--}}
+{{--        @foreach($errors->all() as $error)--}}
+{{--            <x-alert type="danger" :message="$error" ></x-alert>--}}
+{{--        @endforeach--}}
+{{--    @endif--}}
 
     <form method="POST" action="{{route('admin.orders.store')}}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
-            <label for="name">Имя</label>
+            <label for="name">Имя @error('name') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
             <input type="text" name="name" id="name" class="form-control" value="{{old('name')}}">
         </div>
         <div class="form-group">
-            <label for="phone">Телефон</label>
+            <label for="phone">Телефон @error('phone') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
             <input type="text" name="phone" id="phone" class="form-control" value="{{old('phone')}}">
         </div>
         <div class="form-group">
-            <label for="email">Е-мэйл</label>
+            <label for="email">Е-мэйл @error('email') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
             <input type="text" name="email" id="email" class="form-control" value="{{old('email')}}">
         </div>
         <div class="form-group">
-            <label for="description">Описание</label>
+            <label for="description">Описание @error('description') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
             <textarea name="description" id="description" class="form-control">{{old('description')}}</textarea>
         </div>
         <br />

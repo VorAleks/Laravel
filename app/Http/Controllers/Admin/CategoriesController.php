@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Categories\Store;
+use App\Http\Requests\Categories\Update;
 use App\Models\Category;
 use App\Queries\CategoriesQueryBuilder;
 use App\Queries\QueryBuilder;
@@ -42,15 +44,10 @@ class CategoriesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Store $request): RedirectResponse
     {
-        $request->validate([
-            'title' => ['required', 'string'],
-        ]);
-
-        $category = $request->only(['title', 'description']);
-        $category = Category::create($category);
-        if ($category !== false) {
+        $category = Category::create($request->validated());
+        if ($category) {
             return \redirect()->route('admin.categories.index')->with('success', 'Category has been create');
         }
         return \back()->with('error', 'Category has not been create');
@@ -75,9 +72,9 @@ class CategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category): RedirectResponse
+    public function update(Update $request, Category $category): RedirectResponse
     {
-        $category = $category->fill($request->only(['title', 'description']));
+        $category = $category->fill($request->validated());
         if ($category->save()) {
             return \redirect()->route('admin.categories.index')->with('success', 'Category has been update');
         }
@@ -89,6 +86,14 @@ class CategoriesController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+
+            return \response()->json('ok');
+        } catch (\Throwable $exception) {
+            \log::error($exception->getMessage(),$exception->getTrace());
+
+            return \response()->json('error', 400);
+        }
     }
 }
