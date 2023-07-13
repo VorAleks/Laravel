@@ -1,14 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Orders\Store;
+use App\Http\Requests\Orders\Update;
 use App\Models\Order;
 use App\Queries\OrdersQueryBuilder;
 use App\Queries\QueryBuilder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use PhpParser\Lexer\TokenEmulator\ReadonlyTokenEmulator;
 
 class OrdersController extends Controller
 {
@@ -42,16 +48,10 @@ class OrdersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Store $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'string'],
-        ]);
-
-        $order = $request->only(['name', 'phone', 'email', 'description']);
-        $order = Order::create($order);
-        if ($order !== false) {
+        $order = Order::create($request->validated());
+        if ($order) {
             return \redirect()->route('admin.orders.index')->with('success', 'Order has been create');
         }
         return \back()->with('error', 'Order has not been create');
@@ -76,9 +76,9 @@ class OrdersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order): RedirectResponse
+    public function update(Update $request, Order $order): RedirectResponse
     {
-        $order = $order->fill($request->only(['name', 'phone', 'email', 'description']));
+        $order = $order->fill($request->validated());
         if ($order->save()) {
             return \redirect()->route('admin.orders.index')->with('success', 'Order has been update');
         }
@@ -88,8 +88,16 @@ class OrdersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function destroy(Order $order): JsonResponse
     {
-        //
+        try {
+            $order->delete();
+
+            return \response()->json('ok');
+        } catch (\Throwable $exception) {
+            \log::error($exception->getMessage(), $exception->getTrace());
+
+            return \response()->json('error', 400);
+        }
     }
 }

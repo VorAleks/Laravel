@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Orders\Store;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use function App\Enums\all;
+
 
 class OrdersController extends Controller
 {
@@ -17,15 +20,9 @@ class OrdersController extends Controller
             ['users' => User::query()->get()->all()]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Store $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'string'],
-        ]);
-
-        $order = $request->only(['name', 'phone', 'email', 'description']);
-        $order = Order::create($order);
+        $order = Order::create($request->validated());
         if ($order !== false) {
             return \redirect()->route('index')->with('success', 'Order has been create');
         }

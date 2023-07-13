@@ -25,10 +25,43 @@
                     <td>{{ $source->title }}</td>
                     <td>{{ $source->url }}</td>
                     <td>{{ $source->created_at }}</td>
-                    <td><a href="{{ route('admin.sources.edit', ['source' => $source]) }}">Edit</a>&nbsp; <a href="" style="color:red">Delete</a></td>
+                    <td><a href="{{ route('admin.sources.edit', ['source' => $source]) }}">Edit</a>&nbsp;
+                        <a href="javascript:;" style="color:red" class="delete" rel="{{ $source->id }}">Delete</a>
+                    </td>
                 </tr>
             @endforeach
         </table>
         {{ $sourcesList->links() }}
     </div>
 @endsection
+@push('js')
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            let elements = document.querySelectorAll('.delete');
+            elements.forEach(function (element, key) {
+                element.addEventListener('click', function () {
+                    let id = this.getAttribute('rel');
+                    if (confirm(`Подтвердите удаление источника новости с #ID ${id}.`)) {
+                        send(`/admin/sources/${id}`).then( () => {
+                            location.reload()
+                        });
+                    } else {
+                        alert('Вы отменили удаление источника новости.')
+                    }
+                });
+            })
+        });
+
+        async function send(url) {
+            let response = await  fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+
+            let result = await response.json();
+            return result.ok;
+        }
+    </script>
+@endpush

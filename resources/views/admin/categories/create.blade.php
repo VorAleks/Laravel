@@ -5,21 +5,21 @@
         <h1 class="h2">Добавить категорию</h1>
     </div>
 
-    @if ($errors->any())
-        @foreach($errors->all() as $error)
-            <x-alert type="danger" :message="$error" ></x-alert>
-        @endforeach
-    @endif
+{{--    @if ($errors->any())--}}
+{{--        @foreach($errors->all() as $error)--}}
+{{--            <x-alert type="danger" :message="$error" ></x-alert>--}}
+{{--        @endforeach--}}
+{{--    @endif--}}
 
     <form method="POST" action="{{route('admin.categories.store')}}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
-            <label for="title">Заголовок</label>
+            <label for="title">Заголовок @error('title') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
             <input type="text" name="title" id="title" class="form-control" value="{{old('title')}}">
         </div>
         <div class="form-group">
-            <label for="description">Описание</label>
+            <label for="description">Описание @error('description') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
             <textarea name="description" id="description" class="form-control">{{old('description')}}</textarea>
         </div>
         <br />

@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Sources\Store;
+use App\Http\Requests\Sources\Update;
 use App\Models\Source;
 use App\Queries\QueryBuilder;
 use App\Queries\SourcesQueryBuilder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -42,16 +47,10 @@ class SourcesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Store $request): RedirectResponse
     {
-        $request->validate([
-            'title' => ['required', 'string'],
-            'url' => ['required', 'string'],
-        ]);
-
-        $source = $request->only(['title', 'url']);
-        $source = Source::create($source);
-        if ($source !== false) {
+        $source = Source::create($request->validated());
+        if ($source) {
             return \redirect()->route('admin.sources.index')->with('success', 'Source has been create');
         }
         return \back()->with('error', 'Source has not been create');
@@ -76,9 +75,9 @@ class SourcesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Source $source): RedirectResponse
+    public function update(Update $request, Source $source): RedirectResponse
     {
-        $source = $source->fill($request->only(['title', 'url']));
+        $source = $source->fill($request->validated());
         if ($source->save()) {
             return \redirect()->route('admin.sources.index')->with('success', 'Source has been update');
         }
@@ -88,8 +87,16 @@ class SourcesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Source $source)
+    public function destroy(Source $source): JsonResponse
     {
-        //
+        try {
+            $source->delete();
+
+            return \response()->json('success', 200);
+        } catch (\Throwable $exception) {
+            \log::error($exception->getMessage(), $exception->getTrace());
+
+            return \response()->json('error', 400);
+        }
     }
 }
