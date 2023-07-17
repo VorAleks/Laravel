@@ -18,9 +18,9 @@ class CategoriesQueryBuilder extends QueryBuilder
         return Category::query();
     }
 
-    public function getAll(): LengthAwarePaginator
+    public function getAll(): Collection
     {
-        return $this->getModel()->paginate(10);
+        return $this->getModel()->get();
     }
 
     public function getById($id): Model|Collection|Builder|array|null

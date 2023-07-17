@@ -33,7 +33,7 @@ class Store extends FormRequest
             'image' => ['sometimes'],
             'status' => ['required', new Enum(NewsStatus::class)],
             'description' => ['nullable', 'string', 'max:3000'],
-            'sources' => ['nullable', 'array'],
+            'sources' => ['nullable|array'],
             'sources.*' => ['exists:sources,id'],
         ];
     }
