@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\IndexController as AdminIndexController;
@@ -26,24 +29,38 @@ use App\Http\Controllers\NewsController;
 
 //   return view('Welcome');
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::group(['prefix' => 'account'], static function () {
+        Route::get('/', AccountController::class)
+            ->name('account.account');
+        Route::match(['get', 'post'],'/profile', [ProfileController::class, 'update'])
+            ->name('account.profile.update');
+//        Route::post('/profile/update', [ProfileController::class, 'update'])
+//            ->name('account.profile.update');
+    });
 
-// Admin
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function() {
-    Route::get('/', AdminIndexController::class)
-        ->name('index');
-    Route::resource('/categories', AdminCategoriesController::class);
-    Route::resource('/news', AdminNewsController::class);
-    Route::resource('/sources', AdminSourcesController::class);
-    Route::resource('/orders', AdminOrdersController::class);
-    Route::resource('/users', AdminUsersController::class);
+    // Admin
+    Route::group([
+        'prefix' => 'admin',
+        'as' => 'admin.',
+        'middleware' => 'check.admin',
+    ], static function () {
+        Route::get('/', AdminIndexController::class)
+            ->name('index');
+        Route::resource('/categories', AdminCategoriesController::class);
+        Route::resource('/news', AdminNewsController::class);
+        Route::resource('/sources', AdminSourcesController::class);
+        Route::resource('/orders', AdminOrdersController::class);
+        Route::resource('/users', AdminUsersController::class);
+    });
 });
 
 // Guest's routes
 
-Route::get('/', [
-    HomeController::class, 'index'])
-    ->name('index');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
 Route::get('/news', [NewsController::class, 'index'])
     ->name('news.index');
@@ -63,3 +80,8 @@ Route::get('/orders/create', [OrdersController::class, 'create'])
 Route::post('/orders/store', [OrdersController::class, 'store'])
     ->name('orders.store');
 
+
+
+Auth::routes();
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');

@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\Store;
+use App\Http\Requests\Users\Update;
 use App\Models\User;
 use App\Queries\QueryBuilder;
 use App\Queries\UsersQueryBuilder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class UsersController extends Controller
@@ -34,28 +38,25 @@ class UsersController extends Controller
      */
     public function create(): View
     {
-        return view('admin.users.create', [
-            'users' => $this->usersQueryBuilder->getAll(),
-        ]);
+        return view('admin.users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(User $user)
+    public function store(Store $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'email' => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
-
-        $user = $request->only(['name', 'email', 'password']);
-        $user = User::create($user);
-        if ($user !== false) {
-            return \redirect()->route('admin.users.index')->with('success', 'User has been create');
+        $data = $request->validated();
+        if (isset($data['isAdmin'])) {
+            $data['isAdmin'] = true;
         }
-        return \back()->with('error', 'User has not been create');
+
+        $user = User::create($data);
+
+        if ($user) {
+            return \redirect()->route('admin.users.index')->with('success', __('User has been created'));
+        }
+        return \back()->with('error', __('User has not been created'));
     }
 
     /**
@@ -71,7 +72,7 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        return \view('admin.user.edit', [
+        return \view('admin.users.edit', [
                 'user' => $user,
             ]
         );
@@ -80,13 +81,25 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Update $request, User $user)
     {
-        $user = $user->fill($request->only(['name', 'email', 'password']));
-        if ($user->save()) {
-            return \redirect()->route('admin.users.index')->with('success', 'User has been update');
+        $data = $request->validated();
+
+        (isset($data['isAdmin'])) ? $data['isAdmin'] = true : $data['isAdmin'] = false;
+
+        if ($data['password'] !== $data['password-confirm']) {
+            return \back()->with('error', __('Do not match password in two lines.'));
+        } else {
+            unset($data['password-confirm']);
         }
-        return \back()->with('error', 'User has not been update');
+
+        $data = array_filter($data, static function($var){return $var !== null;} );
+        dd($data, $user);
+        $user = $user->fill($data);
+        if ($user->save()) {
+            return \redirect()->route('admin.users.index')->with('success', __('User has been updated'));
+        }
+        return \back()->with('error', __('User has not been updated'));
     }
 
     /**
@@ -94,6 +107,14 @@ class UsersController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        try {
+            $user->delete();
+
+            return \response()->json('ok');
+        } catch (\Throwable $exception) {
+            \log::error($exception->getMessage(), $exception->getTrace());
+
+            return \response()->json('error', 400);
+        }
     }
 }
