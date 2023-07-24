@@ -34,9 +34,11 @@
         <div class="form-group">
             Admin:<br>
             @if($user->isAdmin)
-            <input type="checkbox" class="form-check-input" name="isAdmin" checked>&nbsp;Yes/No <br>
-            @else
-            <input type="checkbox" class="form-check-input" name="isAdmin" >&nbsp;Yes/No <br>
+                <input type="radio" class="form-check-input" name="isAdmin" checked value="1">&nbsp;Yes <br>
+                <input type="radio" class="form-check-input" name="isAdmin" value="0">&nbsp;No <br>
+                        @else
+                <input type="radio" class="form-check-input" name="isAdmin"  value="1">&nbsp;Yes <br>
+                <input type="radio" class="form-check-input" name="isAdmin" checked value="0">&nbsp;No <br>
             @endif
         </div>
 
