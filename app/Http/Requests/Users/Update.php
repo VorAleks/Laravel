@@ -25,10 +25,10 @@ class Update extends FormRequest
         return [
             'name' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'string', 'max:250', 'unique:users,email'],
-            'currentPassword' => ['required'],
+            'currentPassword' => ['nullable|required'],
             'password' => ['nullable'],
             'password-confirm' => ['nullable'],
-            'isAdmin' => ['nullable','string'],
+            'isAdmin' => ['boolean'],
         ];
     }
 

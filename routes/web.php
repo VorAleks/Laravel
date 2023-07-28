@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\ParserController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialProvidersController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +50,9 @@ Route::group(['middleware' => 'auth'], function () {
     ], static function () {
         Route::get('/', AdminIndexController::class)
             ->name('index');
+        Route::get('/{source}/parser', ParserController::class)
+            ->where('source', '\w+')
+            ->name('parser');
         Route::resource('/categories', AdminCategoriesController::class);
         Route::resource('/news', AdminNewsController::class);
         Route::resource('/sources', AdminSourcesController::class);
@@ -58,8 +63,18 @@ Route::group(['middleware' => 'auth'], function () {
 
 // Guest's routes
 
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/{driver}/redirect', [SocialProvidersController::class, 'redirect'])
+        ->where('driver', '\w+')
+        ->name('social-providers.redirect');
+    Route::get('/{drivers}/callback', [SocialProvidersController::class, 'callback'])
+        ->where('driver', '\w+')
+        ->name('social-providers.callback');
+});
+
 //Route::get('/', function () {
 //    return view('welcome');
+//    dd(app());
 //});
 
 Route::get('/news', [NewsController::class, 'index'])
@@ -85,3 +100,4 @@ Route::post('/orders/store', [OrdersController::class, 'store'])
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
+

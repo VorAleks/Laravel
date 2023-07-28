@@ -85,7 +85,7 @@ class UsersController extends Controller
     {
         $data = $request->validated();
 
-        (isset($data['isAdmin'])) ? $data['isAdmin'] = true : $data['isAdmin'] = false;
+//        (isset($data['isAdmin'])) ? $data['isAdmin'] = true : $data['isAdmin'] = false;
 
         if ($data['password'] !== $data['password-confirm']) {
             return \back()->with('error', __('Do not match password in two lines.'));
@@ -94,7 +94,7 @@ class UsersController extends Controller
         }
 
         $data = array_filter($data, static function($var){return $var !== null;} );
-        dd($data, $user);
+//        dd($data, $user);
         $user = $user->fill($data);
         if ($user->save()) {
             return \redirect()->route('admin.users.index')->with('success', __('User has been updated'));
