@@ -30,7 +30,7 @@ class CategoriesController extends Controller
      */
     public function index(): View
     {
-        return view('admin.categories.index', ['categoriesList' => $this->categoriesQueryBuilder->getAll()]);
+        return view('admin.categories.index', ['categoriesList' => $this->categoriesQueryBuilder->getAllPaginate()]);
     }
 
     /**

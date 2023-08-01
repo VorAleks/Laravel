@@ -17,12 +17,17 @@
         @forelse ($news as $newsItem)
         <div class="col">
             <div class="card shadow-sm">
-                <img src="{{$newsItem->image}}"/>
-
+                @if($newsItem->image == null)
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                @elseif(current(explode('/', $newsItem->image)) === 'https:')
+                    <img src="{{ $newsItem->image }}"/>
+                @else
+                    <img src="{{ Storage::disk('public')->url($newsItem->image) }}"/>
+                @endif
                 <div class="card-body">
                     <p>Рубрика: {{$newsItem->categories->map(fn($item) => $item->title)->implode('|')}}</p>
                     <p><strong><a href="{{ route('news.show', ['news' => $newsItem->id]) }}"><h2>{{$newsItem->title}}</h2></a></strong></p>
-                    <p class="card-text">{{$newsItem->description}}</p>
+                    <p class="card-text">{!! $newsItem->description !!}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                            <a href="{{ route('news.show', ['news' => $newsItem->id]) }}" type="button" class="btn btn-sm btn-outline-secondary">Подробнее</a>

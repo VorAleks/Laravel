@@ -33,7 +33,7 @@ class OrdersController extends Controller
     public function index(): View
     {
         return view('admin.orders.index', [
-            'ordersList' => $this->ordersQueryBuilder->getAll()
+            'ordersList' => $this->ordersQueryBuilder->getAllPaginate()
         ]);
     }
 

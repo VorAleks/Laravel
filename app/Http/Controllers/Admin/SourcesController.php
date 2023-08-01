@@ -32,7 +32,7 @@ class SourcesController extends Controller
     public function index(): View
     {
         return view('admin.sources.index', [
-            'sourcesList' => $this->sourcesQueryBuilder->getAll(),
+            'sourcesList' => $this->sourcesQueryBuilder->getAllPaginate(),
         ]);
     }
 

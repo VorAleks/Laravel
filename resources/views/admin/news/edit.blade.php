@@ -34,6 +34,7 @@
         </div>
         <div class="form-group">
             <label for="image">Изображение @error('img') <strong STYLE="color:red">{{ $message }}</strong> @enderror</label>
+            <img src="{{ Storage::disk('public')->url($news->image) }}"/>
             <input type="file" name="image" id="image" class="form-control">
         </div>
         <div class="form-group">
@@ -63,3 +64,25 @@
         <button type="submit" class="btn btn-success">Сохранить</button>
     </form>
 @endsection
+@push('js')
+
+{{--    <script>--}}
+{{--        ClassicEditor--}}
+{{--            .create( document.querySelector( '#description' ) )--}}
+{{--            .catch( error => {--}}
+{{--                console.error( error );--}}
+{{--            } );--}}
+{{--    </script>--}}
+
+<script>
+    var options = {
+        filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+        filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+    };
+</script>
+<script>
+    CKEDITOR.replace('description', options);
+</script>
+@endpush

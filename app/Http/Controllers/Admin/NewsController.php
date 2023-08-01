@@ -12,6 +12,7 @@ use App\Queries\CategoriesQueryBuilder;
 use App\Queries\NewsQueryBuilder;
 use App\Queries\QueryBuilder;
 use App\Queries\SourcesQueryBuilder;
+use App\Services\Contracts\Upload;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -38,7 +39,7 @@ class NewsController extends Controller
     public function index(): View
     {
         return view('admin.news.index', [
-            'newsList' => $this->newsQueryBuilder->getAll()
+            'newsList' => $this->newsQueryBuilder->getAllPaginate()
         ]);
     }
 
@@ -58,8 +59,10 @@ class NewsController extends Controller
      */
     public function store(Store $request): RedirectResponse
     {
+
         $news = News::create($request->validated());
         if ($news) {
+
                 $news->categories()->attach($request->getCategories());
                 $news->sources()->attach($request->getSources());
 
@@ -92,9 +95,14 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Update $request, News $news): RedirectResponse
+    public function update(Update $request, News $news, Upload $upload): RedirectResponse
     {
         $news = $news->fill($request->validated());
+
+        if ($request->hasFile('image')) {
+            $news['image'] = $upload->create($request->file('image'));
+        }
+
         if ($news->save()) {
             $news->categories()->sync($request->getCategories());
             $news->sources()->sync($request->getSources());
