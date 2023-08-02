@@ -47,7 +47,7 @@ class ParserController extends Controller
                         'uses' => 'channel.image.url',
                     ],
                     'news'=> [
-                        'uses' => 'channel.item[title,author,description,category]'
+                        'uses' => 'channel.item[title,pubDate,description,category,author]'
                     ]
                 ];
             break;
@@ -67,7 +67,7 @@ class ParserController extends Controller
                         'uses' => 'channel.image.url',
                     ],
                     'news'=> [
-                        'uses' => 'channel.item[title,link,author,description,pubDate]'
+                        'uses' => 'channel.item[title,pubDate,description,category,author]'
                     ]
                 ];
                 break;
@@ -92,6 +92,7 @@ class ParserController extends Controller
 
             dispatch(new NewsParsingJob($url, $map));
         }
+
 
         return "Data saved" . $start . ' ' . date('c');
     }

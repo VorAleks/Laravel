@@ -6,7 +6,7 @@
         <div class="btn-toolbar mb-2 mb-md-0">
             <a href="{{ route('admin.parser', ['source' => 'rambler']) }}">Загрузить новости с Рамблера</a>&nbsp;
             <a href="{{ route('admin.parser', ['source' => 'cbrPress']) }}">Новости ЦБ</a>&nbsp;
-            <a href="{{ route('admin.parser', ['source' => 'cbrCurrency']) }}">Курсы ЦБ</a>
+{{--            <a href="{{ route('admin.parser', ['source' => 'cbrCurrency']) }}">Курсы ЦБ</a>--}}
         </div>
     </div>
     <x-alert :type="request()->get('type', 'success')" message="some message"></x-alert>

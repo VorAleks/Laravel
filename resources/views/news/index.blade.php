@@ -32,7 +32,7 @@
                         <div class="btn-group">
                            <a href="{{ route('news.show', ['news' => $newsItem->id]) }}" type="button" class="btn btn-sm btn-outline-secondary">Подробнее</a>
                         </div>
-                        <small class="text-muted">{{$newsItem->author}} ({{$newsItem->created_at}})</small>
+                        <small class="text-muted">{{$newsItem->author}} ({{date('d.m.Y H:i:s', strtotime($newsItem->pubDate))}})</small>
                     </div>
                 </div>
             </div>
