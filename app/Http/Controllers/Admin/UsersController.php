@@ -30,7 +30,7 @@ class UsersController extends Controller
     public function index(): View
     {
         return view('admin.users.index', [
-            'usersList' => $this->usersQueryBuilder->getAll()] );
+            'usersList' => $this->usersQueryBuilder->getAllPaginate()] );
     }
 
     /**

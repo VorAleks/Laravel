@@ -50,7 +50,10 @@
 
 <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+<script src="{{ asset('assets/js/feather.min.js') }}"></script>
+{{--<script src="https://cdn.ckeditor.com/ckeditor5/38.1.1/classic/ckeditor.js"></script>--}}
+<script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
+{{--<script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>--}}
 <script src="{{ asset('assets/js/dashboard.js') }}"></script>
 @stack('js')
 </body>

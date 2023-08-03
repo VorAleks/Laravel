@@ -6,6 +6,7 @@ namespace App\Queries;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UsersQueryBuilder extends QueryBuilder
@@ -16,7 +17,12 @@ class UsersQueryBuilder extends QueryBuilder
         return User::query();
     }
 
-    public function getAll(): LengthAwarePaginator
+    public function getAll(): Collection
+    {
+        return $this->getModel()->get();
+    }
+
+    public function getAllPaginate(): LengthAwarePaginator
     {
         return $this->getModel()->paginate(10);
     }

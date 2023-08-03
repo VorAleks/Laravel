@@ -13,8 +13,13 @@
             @forelse ($categories as $newsItem)
                 <div class="col">
                     <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-
+                        @if(\PHPUnit\Framework\isNull($newsItem->image))
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                        @elseif(current(explode('/', $newsItem->image)) === 'https:')
+                            <img src="{{ $newsItem->image }}"/>
+                        @else
+                            <img src="{{ Storage::disk('public')->url($newsItem->image) }}"/>
+                        @endif
                         <div class="card-body">
 {{--                            <p>Рубрика: {{$category}}</p>--}}
                             <p><strong><a href="{{ route('categories.show', ['id' => $newsItem->id]) }}"><h2>{{$newsItem->title}}</h2></a></strong></p>

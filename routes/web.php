@@ -31,6 +31,10 @@ use App\Http\Controllers\NewsController;
 
 //   return view('Welcome');
 
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth', 'check.admin']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'account'], static function () {
         Route::get('/', AccountController::class)

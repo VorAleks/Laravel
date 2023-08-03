@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\NewsParsingJob;
+use App\Models\Source;
+use App\Queries\QueryBuilder;
+use App\Queries\SourcesQueryBuilder;
 use App\Services\Contracts\Parser;
 use Illuminate\Http\Request;
 
@@ -12,14 +16,23 @@ use Illuminate\Http\Request;
 
 class ParserController extends Controller
 {
+    protected QueryBuilder $sourcesQueryBuilder;
+
+    public function __construct(
+        SourcesQueryBuilder $sourcesQueryBuilder
+    )
+    {
+        $this->sourcesQueryBuilder = $sourcesQueryBuilder;
+    }
     /**
      * Handle the incoming request.
      */
     public function __invoke(Request $request, Parser $parser, string $source): string
     {
+        $start = date('c');
         switch ($source) {
             case 'rambler':
-                $url = 'https://news.rambler.ru/rss/tech/';
+                $urls = $this->sourcesQueryBuilder->getAll();
                 $map = [
                     'title' => [
                         'uses' => 'channel.title',
@@ -34,12 +47,12 @@ class ParserController extends Controller
                         'uses' => 'channel.image.url',
                     ],
                     'news'=> [
-                        'uses' => 'channel.item[title,link,author,description,pubDate,category]'
+                        'uses' => 'channel.item[title,pubDate,description,category,author]'
                     ]
                 ];
             break;
             case 'cbrPress':
-                $url = 'https://www.cbr.ru/rss/RssPress';
+                $urls = ['https://www.cbr.ru/rss/RssPress'];
                 $map = [
                     'title' => [
                         'uses' => 'channel.title',
@@ -54,7 +67,7 @@ class ParserController extends Controller
                         'uses' => 'channel.image.url',
                     ],
                     'news'=> [
-                        'uses' => 'channel.item[title,link,author,description,pubDate,category]'
+                        'uses' => 'channel.item[title,pubDate,description,category,author]'
                     ]
                 ];
                 break;
@@ -69,9 +82,18 @@ class ParserController extends Controller
 
         }
 
+        foreach ($urls as $urlItem) {
 
-        $parser->setLink($url)->setMap($map)->saveParseData();
+            if($urlItem instanceof Source) {
+                $url = $urlItem->url;
+            } else {
+                $url = $urlItem;
+            }
 
-        return "Data saved";
+            dispatch(new NewsParsingJob($url, $map));
+        }
+
+
+        return "Data saved" . $start . ' ' . date('c');
     }
 }
